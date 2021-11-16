@@ -1,16 +1,21 @@
 # coding=utf-8
+import json
 from flask import Flask, jsonify, request, abort
 from task import TaskDAO
 import pymongo
 
 app = Flask('todoapp')
-client = pymongo.MongoClient('mongodb://localhost')
+client = pymongo.MongoClient('mongodb://localhost:27071')
 database = client.todo_list
 tasks_dao = TaskDAO(database)
 
+@app.route('/')
+def ping():
+    return jsonify({'version': 1}), 200
 
 @app.route('/tasks')
 def list():
+    print('retrieving tasks')
     return jsonify(tasks_dao.list()), 200
 
 
