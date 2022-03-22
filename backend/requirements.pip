@@ -1,5 +1,6 @@
 click
 flask
+flask-cors
 itsdangerous
 jinja2
 markupsafe

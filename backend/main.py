@@ -1,11 +1,15 @@
 # coding=utf-8
-import json
 from flask import Flask, jsonify, request, abort
-from task import TaskDAO
+from flask_cors import CORS, cross_origin
+from src.task import TaskDAO
 import pymongo
 
 app = Flask('todoapp')
-client = pymongo.MongoClient('mongodb://localhost:27071')
+# configure CORS for cross-origin resource sharing (between the frontend and backend)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+client = pymongo.MongoClient('mongodb://localhost:27017')
 database = client.todo_list
 tasks_dao = TaskDAO(database)
 
@@ -13,7 +17,8 @@ tasks_dao = TaskDAO(database)
 def ping():
     return jsonify({'version': 1}), 200
 
-@app.route('/tasks')
+@app.route('/tasks', methods=['GET'])
+@cross_origin()
 def list():
     print('retrieving tasks')
     return jsonify(tasks_dao.list()), 200
@@ -28,6 +33,7 @@ def get(pk):
 @app.route('/tasks', methods=['POST'])
 def create():
     if request.method == 'POST':
+        # TODO json input forced - is this good?
         data = request.json
         title = data.get('title', None)
         description = data.get('description', None)
