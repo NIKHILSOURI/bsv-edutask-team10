@@ -13,7 +13,7 @@ class Video:
     def create(self, data):
         video = {
             'url': data.get('url'),
-            'task': ObjectId(data.get('taskid'))
+            'taskid': ObjectId(data.get('taskid'))
         }
 
         inserted_id = self.collection.insert_one(video).inserted_id
@@ -21,6 +21,7 @@ class Video:
         
         return self.to_json(video)
 
+    # obtain a video by id
     def get_video(self, object_id):
         video = self.collection.find_one({ '_id': ObjectId(object_id)})
         return self.to_json(video)

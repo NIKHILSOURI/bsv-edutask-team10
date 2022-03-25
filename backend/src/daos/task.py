@@ -4,7 +4,7 @@ from bson import json_util
 from bson.objectid import ObjectId
 
 
-class TaskDAO:
+class Task:
     def __init__(self, database):
         self.database = database
         self.collection = self.database.task
@@ -18,7 +18,7 @@ class TaskDAO:
             'due': data.get('duedate'),
             'users': [ObjectId(data.get('userid'))],
             'requires': [],
-            'category': None,
+            'categories': data.get('categories'),
             'todos': [],
             'video': None
         }
@@ -29,17 +29,30 @@ class TaskDAO:
 
         return self.to_json(task)
 
-    def get_all(self):
-        tasks = self.collection.find()
-        return self.to_json(tasks)
-
+    # obtain a task by its id
     def get_task(self, task_id: str):
-        task = self.collection.find_one({ '_id': ObjectId(task_id)})
-        return self.to_json(task)
+        task = None
+        try:
+            task = self.collection.find_one({ '_id': ObjectId(task_id)})
+        except Exception as e:
+            print(e)
+        finally:
+            if task:
+                task = self.to_json(task)
+            return task
 
+    # obtain all tasks associated to one user
     def get_tasks_of_user(self, user_id: str):
-        tasks = self.collection.find({'users': ObjectId(user_id)})
-        return list(tasks)
+        tasks = []
+        try:
+            taskobjects = self.collection.find({'users': ObjectId(user_id)})
+
+            for obj in taskobjects:
+                tasks.append(self.to_json(obj))
+        except Exception as e:
+            print(e)
+        finally:
+            return tasks
 
     def add_video(self, task_id: str, video_id: str):
         self.collection.update_one(

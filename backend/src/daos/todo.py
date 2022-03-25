@@ -22,19 +22,18 @@ class Todo:
         
         return self.to_json(todo)
 
-    def get_todo(self, object_id):
-        todo = self.collection.find_one({ '_id': ObjectId(object_id)})
-        return self.to_json(todo)
-
+    # return all todo objects of a task
     def get_todos_of_task(self, task_id: str):
-        todos = self.collection.find({'task': ObjectId(task_id)})
-        return list(todos)
+        todos = []
+        try:
+            todoobjects = self.collection.find({'task': ObjectId(task_id)})
 
-    #def update(self):
-    #    pass
-
-    #def delete(self):
-    #    pass
+            for obj in todoobjects:
+                todos.append(self.to_json(obj))
+        except Exception as e:
+            print(e)
+        finally:
+            return todos
 
     def to_json(self, data):
         return json.loads(json_util.dumps(data))
