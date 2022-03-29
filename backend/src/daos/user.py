@@ -3,11 +3,42 @@ import json
 from bson import json_util
 from bson.objectid import ObjectId
 
+validator = {
+    '$jsonSchema': {
+        'bsonType': 'object',
+        'required': ['firstName', 'lastName', 'email'],
+        'properties': {
+            'firstName': {
+                'bsonType': 'string',
+                'description': 'the first name of a user must be determined'
+            }, 
+            'lastName': {
+                'bsonType': 'string',
+                'description': 'the last name of a user must be determined'
+            },
+            'email': {
+                'bsonType': 'string',
+                'description': 'the email address of a user must be determined'
+            },
+            'tasks': {
+                'bsonType': 'array',
+                'uniqueItems': True,
+                'items': {
+                    'bsonType': 'objectId'
+                }
+            }
+        }
+    }
+}
+
 class User:
 
     def __init__(self, database):
         self.database = database
-        self.user_collection = self.database.user
+        print(self.database.list_collection_names())
+        if 'user' not in self.database.list_collection_names():
+            self.database.create_collection('user', validator=validator)
+        self.user_collection = self.database['user']
 
     # create a new user
     def create(self, data):
@@ -25,6 +56,7 @@ class User:
             inserted_id = self.user_collection.insert_one(userdata).inserted_id
             user = self.user_collection.find_one({ '_id': ObjectId(inserted_id) })
         except Exception as e:
+            # todo: handle validation errors
             print(f'Error in User DAO: {e}')
         finally:
             if user != None:
@@ -43,6 +75,17 @@ class User:
             user = self.user_collection.find_one({ '_id': ObjectId(object_id)})
         except:
             print(f'Error: No user found with id {object_id}')
+        finally:
+            if user != None:
+                user = self.to_json(user)
+            return user
+
+    def get_user_by_email(self, email):
+        user = None
+        try:
+            user = self.user_collection.find_one({ 'email': email})
+        except:
+            print(f'Error: No user found with email {email}')
         finally:
             if user != None:
                 user = self.to_json(user)
