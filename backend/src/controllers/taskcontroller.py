@@ -1,74 +1,70 @@
-import os
+from bson.objectid import ObjectId
 from datetime import datetime
 
-# instantiate pymongo and create a connection to the database
-import pymongo
-client = pymongo.MongoClient(os.environ.get('MONGO_URL'))
-database = client.todo_list
-
 # create a data access object
-from src.daos.task import Task
-from src.daos.video import Video
-from src.daos.todo import Todo
-tasks_dao = Task(database)
-videos_dao = Video(database)
-todos_dao = Todo(database)
+from src.util.dao import DAO
+tasks_dao = DAO(collection_name='task')
+videos_dao = DAO(collection_name='video')
+todos_dao = DAO(collection_name='todo')
+users_dao = DAO(collection_name='user')
 
 # create a new task
 def create_task(data):
-    # make sure all mandatory fields are set
-    if not all (key in data for key in ('title', 'userid', 'url', 'todos')):
-        return None
+    try:
+        # store the user id
+        uid = data['userid']
+        del data['userid']
 
-    # fill default values for missing values
-    if 'startdate' not in data:
-        data['startdate'] = datetime.today().strftime('%Y-%m-%d')
-    if 'duedate' not in data:
-        data['duedate'] = None
-    if 'categories' not in data:
-        data['categories'] = []
+        # fill default values for missing values
+        if 'startdate' not in data:
+            data['startdate'] = datetime.today()
+        #if 'duedate' not in data:
+        #    data['duedate'] = None
+        if 'categories' not in data:
+            data['categories'] = []
 
-    # create the task object
-    task = tasks_dao.create(data)
+        # add the video url
+        video = videos_dao.create({'url': data['url'] })
+        del data['url']
+        data['video'] = ObjectId(video['_id']['$oid'])
 
-    # add the video url
-    video = videos_dao.create({
-        'url': data['url'],
-        'taskid': task['_id']['$oid']
-    })
-    tasks_dao.add_video(task_id=task['_id']['$oid'], video_id=video['_id']['$oid'])
-
-    # create and add todos
-    for todo in data['todos']:
-        todoobj = todos_dao.create({
-            'description': todo,
-            'taskid': task['_id']['$oid']
-        })
-        tasks_dao.add_todo(task_id=task['_id']['$oid'], todo_id=todoobj['_id']['$oid'])
-
-    return task['_id']['$oid']
+        # create and add todos
+        todos = []
+        for todo in data['todos']:
+            todoobj = todos_dao.create({'description': todo, 'done': False })
+            todos.append(ObjectId(todoobj['_id']['$oid']))
+        data['todos'] = todos
+        
+        # create the task object and assign it to the user
+        task = tasks_dao.create(data)
+        users_dao.update(uid, {'$push': {'tasks': ObjectId(task['_id']['$oid'])}})
+        return task['_id']['$oid']
+    except Exception as e:
+        raise
 
 # get a task by id
 def get_task(id):
-    return tasks_dao.get_task(id)
+    try:
+        return tasks_dao.findOne(id)
+    except Exception as e:
+        raise
 
 # get all tasks of a user
 def get_tasks_of_user(id):
-    tasks = tasks_dao.get_tasks_of_user(id)
+    try:
+        # get the user and the tasks associated to him
+        user = users_dao.findOne(id)
+        tasks = tasks_dao.find(filter={'_id': user['tasks']}, toid=['_id'])
 
-    for task in tasks:
-        # populate the video of each task
-        video = videos_dao.get_video(task['video']['$oid'])
-        task['video'] = video['url']
+        for task in tasks:
+            # populate the video of each task
+            video = videos_dao.findOne(task['video']['$oid'])
+            task['video'] = video
 
-        # populate the todos of each task
-        todoobjs = todos_dao.get_todos_of_task(task['_id']['$oid'])
-        todos = []
-        for todo in todoobjs:
-            todos.append({
-                'description': todo['description'],
-                'done': todo['done']
-            })
-        task['todos'] = todos
-    
-    return tasks
+            # populate the todos of each task
+            todos = todos_dao.find(filter={'_id': task['todos']}, toid=['_id'])
+            task['todos'] = todos
+        
+        return tasks
+    except Exception as e:
+        raise

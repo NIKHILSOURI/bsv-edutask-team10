@@ -1,33 +1,47 @@
-import os
+from  src.util.dao import DAO
 
-# instantiate pymongo and create a connection to the database
-import pymongo
-client = pymongo.MongoClient(os.environ.get('MONGO_URL'))
-database = client.todo_list
-
-# create a data access object
-from  src.daos.user import User
-users_dao = User(database)
+dao = DAO(collection_name='user')
 
 # create a new user
 def create_user(data):
-    if not all (key in data for key in ('firstName', 'lastName', 'email')):
-        return None
-        
-    user = users_dao.create(data)
-    if not user:
-        return None
-    return user
+    try:
+        return dao.create(data)
+    except Exception as e:
+        raise
 
 # get a user by id
 def get_user(id):
-    return users_dao.get_user_by_id(id)
+    try:
+        return dao.findOne(id)
+    except Exception as e:
+        raise
+
+# get a user by his email
+def get_user_by_email(email):
+    try:
+        users = dao.find({'email': email})
+        if len(users) == 0:
+            return None
+        elif len(users) > 1:
+            print(f'Error: more than one user found with mail {email}')
+            return users[0]
+        # exactly one user was found
+        return users[0]
+    except Exception as e:
+        raise
 
 # get all users
 def get_all_users():
-    return users_dao.get_all()
+    try:
+        return dao.find()
+    except Exception as e:
+        raise
 
 # update a user
 def update_user(id, data):
-    update_result = users_dao.update_user(id, data)
-    return update_result
+    try:
+        #update_result = users_dao.update_user(id, data)
+        update_result = dao.update(id=id, update_data={'$set': data})
+        return update_result
+    except Exception as e:
+        raise
