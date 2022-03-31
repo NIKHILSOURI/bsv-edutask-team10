@@ -1,22 +1,17 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import './App.css'
 import TaskView from './Components/TaskView'
 import NavBar from './Components/NavBar'
+import LoginForm from './Components/LoginForm'
 
 function App() {
-  // create a react state for the list of tasks to display
-  const [email, setEmail] = useState('')
-
-  const [user, setUser] = useState({
-    "_id": "62455409557d7f5af6cdbb11"
-  })
+  const [user, setUser] = useState({})
   
 
-  const login = (event) => {
-    event.preventDefault();
-    console.log(email)
-    fetch(`http://localhost:5000/users/bymail/${email}`)
+  const login = (details) => {
+    fetch(`http://localhost:5000/users/bymail/${details.email}`)
       .then(res => res.json())
+      // check if the user is valid
       .then(u => {
         u['_id'] = u['_id']['$oid']
         setUser(u)
@@ -25,25 +20,22 @@ function App() {
         console.error(error)
       });
   }
+
+  const logout = (e) => {
+    setUser({});
+  }
   
   return (
     <div>
-      <NavBar />
-
-      {(user == null) ?
+      <NavBar Logout={logout} />
+      {(Object.keys(user).length === 0) ?
         <div>
-          <form onSubmit={login}>
-            <div className='inputwrapper'>
-              <label>Email </label>
-              <input type='text' id='title' name='title' onChange={event => setEmail(event.target.value)}></input>
-            </div>
-
-            <button>Login</button>
-          </form>
+          <h1>Login</h1>
+          <LoginForm Login={login}/>
         </div>
-        : <div>
+        : 
+        <div>
           <h1>Tasks</h1>
-
           <TaskView
             userid={user['_id']}
           />

@@ -11,7 +11,7 @@ function NavBar(props) {
             <ul className="navbar-nav">
                 <NavItem icon="😴" id='1'/>
                 <NavItem icon={<CaretIcon />} id='2'>
-                    <DropdownMenu />
+                    <DropdownMenu Logout={props.Logout} />
                 </NavItem>
             </ul>
         </nav>
@@ -31,10 +31,16 @@ function NavItem(props) {
     );
 }
 
-function DropdownMenu() {
+function DropdownMenu(props) {
     function DropdownItem(props) {
+        const selectItem = (e, fun) => {
+            e.preventDefault();
+    
+            fun();
+        }
+
         return (
-            <a href='#' className="menu-item" key={props.id}>
+            <a href='#' className="menu-item" key={props.id}  onClick={(e) => {selectItem(e, props.Logout)}} >
                 <span className='icon-button'>{props.leftIcon}</span>
                 {props.children}
             </a>
@@ -45,7 +51,7 @@ function DropdownMenu() {
         <div className='dropdown'>
             <DropdownItem id='1'>My Tasks</DropdownItem>
             <DropdownItem id='2'>My Profile</DropdownItem>
-            <DropdownItem id='3' leftIcon={<ArrowIcon />}>Logout</DropdownItem>
+            <DropdownItem id='3' Logout={props.Logout} leftIcon={<ArrowIcon />}>Logout</DropdownItem>
         </div>
     );
 }

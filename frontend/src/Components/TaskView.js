@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import './../Styles/TaskView.css'
+import './../Styles/Form.css'
 
 function TaskView(props) {
   function TaskItem(props) {
     return (
-      <div className='element' key={props.id}>
+      <div className='container-element' key={props.id}>
         { props.children }
       </div>
     );
@@ -37,7 +38,7 @@ function TaskView(props) {
     }
   
     return (
-      <form onSubmit={submitNewTask}>
+      <form className="submit-form" onSubmit={submitNewTask}>
         <div className='inputwrapper'>
           <label>Title</label>
           <input type='text' id='title' name='title' onChange={event => setTitle(event.target.value)}></input>
@@ -47,7 +48,7 @@ function TaskView(props) {
           <input type='text' id='url' name='url' onChange={event => setUrl(event.target.value)}></input>
         </div>
   
-        <button disabled={title.length === 0}>Create new Task</button>
+        <input type="submit" value="Create new Task" disabled={title.length === 0}></input>
       </form>
     )
   }
@@ -89,8 +90,7 @@ function TaskView(props) {
         tasks.map(task => 
           <TaskItem id={task.id}>
             <a href={`https://www.youtube.com/watch?v=${task.url}`} target='_blank' rel="noreferrer">
-              <img src={`http://i3.ytimg.com/vi/${task.url}/hqdefault.jpg`} alt=''></img>
-              
+              <img src={`http://i3.ytimg.com/vi/${task.url}/hqdefault.jpg`} alt='' />
               <div className="title-overlay">{task.title}</div>
             </a>
           </TaskItem>)
