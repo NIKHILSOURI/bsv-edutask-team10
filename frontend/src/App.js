@@ -6,15 +6,33 @@ import LoginForm from './Components/LoginForm'
 
 function App() {
   const [user, setUser] = useState({})
-  
+
+  const signup = (details) => {
+    const data = new URLSearchParams();
+    data.append('email', details.email);
+    data.append('firstName', details.firstName);
+    data.append('lastName', details.lastName);
+
+    fetch('http://localhost:5000/users/create', {
+        method: 'post', 
+        body: data
+      })
+      .then(res => res.json())
+      .then(userobj => {
+        userobj['_id'] = userobj['_id']['$oid'];
+        setUser(userobj);
+      }).catch(function(error) {
+        console.error(error)
+      });
+  }
 
   const login = (details) => {
     fetch(`http://localhost:5000/users/bymail/${details.email}`)
       .then(res => res.json())
       // check if the user is valid
       .then(u => {
-        u['_id'] = u['_id']['$oid']
-        setUser(u)
+        u['_id'] = u['_id']['$oid'];
+        setUser(u);
       })
       .catch(function(error) {
         console.error(error)
@@ -31,13 +49,13 @@ function App() {
       {(Object.keys(user).length === 0) ?
         <div>
           <h1>Login</h1>
-          <LoginForm Login={login}/>
+          <LoginForm Login={login} Signup={signup}/>
         </div>
         : 
         <div>
-          <h1>Tasks</h1>
+          <h1>Your tasks, {user.firstName} {user.lastName}</h1>
           <TaskView
-            userid={user['_id']}
+            user={user}
           />
         </div>}
     </div>

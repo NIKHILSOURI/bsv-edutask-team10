@@ -49,8 +49,6 @@ function DropdownMenu(props) {
 
     return (
         <div className='dropdown'>
-            <DropdownItem id='1'>My Tasks</DropdownItem>
-            <DropdownItem id='2'>My Profile</DropdownItem>
             <DropdownItem id='3' Logout={props.Logout} leftIcon={<ArrowIcon />}>Logout</DropdownItem>
         </div>
     );

@@ -60,7 +60,7 @@ function TaskView(props) {
   }, []); 
 
   const updateTasks = () => {
-    fetch(`http://localhost:5000/tasks/ofuser/${props.userid}`, {
+    fetch(`http://localhost:5000/tasks/ofuser/${props.user._id}`, {
       method: 'get',
       headers: {'Cache-Control': 'no-cache'}
     })
@@ -80,7 +80,6 @@ function TaskView(props) {
         url: item.video.url
       }
     });
-    // store the received tasks in the state
     setTasks(convertedTasks);
   }
 
