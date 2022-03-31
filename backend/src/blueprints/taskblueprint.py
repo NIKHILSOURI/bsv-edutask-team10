@@ -14,13 +14,15 @@ task_blueprint = Blueprint('task_blueprint', __name__)
 def create():
     try:
         data = request.form.to_dict(flat=False)
+        userid = data['userid'][0]
         # convert all non-array fields back to simple values
         for key in ['title', 'description', 'start', 'due', 'userid', 'url']:
             if key in data and isinstance(data[key], list):
                 data[key] = data[key][0]
 
         taskid = controller.create_task(data)
-        return jsonify({'created': taskid}), 201
+        tasks = controller.get_tasks_of_user(userid)
+        return jsonify(tasks), 200
     except WriteError as e:
         abort(400, 'Invalid input data')
     except Exception as e:

@@ -30,8 +30,10 @@ function TaskView(props) {
         method: 'post', 
         body: data
       }).then(res => res.json())
-        .then(console.log('updating'))
-        .then(updateTasks());
+        .then(tasklist => convertTasks(tasklist))
+        .catch(function(error) {
+          console.error(error)
+        });
     }
   
     return (
@@ -45,7 +47,7 @@ function TaskView(props) {
           <input type='text' id='url' name='url' onChange={event => setUrl(event.target.value)}></input>
         </div>
   
-        <button disabled={title.length == 0}>Create new Task</button>
+        <button disabled={title.length === 0}>Create new Task</button>
       </form>
     )
   }
@@ -62,24 +64,23 @@ function TaskView(props) {
       headers: {'Cache-Control': 'no-cache'}
     })
       .then(res => res.json())
-      .then(
-        res => {
-          // convert the tasks into the required format
-          const convertedTasks = res.map(item => {
-            return {
-              id: item._id['$oid'],
-              title: item.title,
-              description: item.description,
-              url: item.video.url
-            }
-          });
-          // store the received tasks in the state
-          setTasks(convertedTasks);
-          console.log(tasks);
-        }
-      ).catch(function(error) {
-        console.log(error)
+      .then(tasklist => convertTasks(tasklist))
+      .catch(function(error) {
+        console.error(error)
       });
+  }
+
+  const convertTasks = (taskilst) => {
+    const convertedTasks = taskilst.map(item => {
+      return {
+        id: item._id['$oid'],
+        title: item.title,
+        description: item.description,
+        url: item.video.url
+      }
+    });
+    // store the received tasks in the state
+    setTasks(convertedTasks);
   }
 
   return (

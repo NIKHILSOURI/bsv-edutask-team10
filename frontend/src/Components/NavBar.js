@@ -9,8 +9,8 @@ function NavBar(props) {
     return (
         <nav className="navbar">
             <ul className="navbar-nav">
-                <NavItem icon="😴" />
-                <NavItem icon={<CaretIcon />}>
+                <NavItem icon="😴" id='1'/>
+                <NavItem icon={<CaretIcon />} id='2'>
                     <DropdownMenu />
                 </NavItem>
             </ul>
@@ -22,12 +22,10 @@ function NavItem(props) {
     const [open, setOpen] = useState(false);
 
     return (
-        <li className='nav-item'>
+        <li className='nav-item' key={props.id}>
             <a href='#' className='icon-button' onClick={() => setOpen(!open)}>
                 {props.icon}
             </a>
-
-            
             {open && props.children}
         </li>
     );
@@ -36,7 +34,7 @@ function NavItem(props) {
 function DropdownMenu() {
     function DropdownItem(props) {
         return (
-            <a href='#' className="menu-item">
+            <a href='#' className="menu-item" key={props.id}>
                 <span className='icon-button'>{props.leftIcon}</span>
                 {props.children}
             </a>
@@ -45,9 +43,9 @@ function DropdownMenu() {
 
     return (
         <div className='dropdown'>
-            <DropdownItem>My Tasks</DropdownItem>
-            <DropdownItem>My Profile</DropdownItem>
-            <DropdownItem leftIcon={<ArrowIcon />}>Logout</DropdownItem>
+            <DropdownItem id='1'>My Tasks</DropdownItem>
+            <DropdownItem id='2'>My Profile</DropdownItem>
+            <DropdownItem id='3' leftIcon={<ArrowIcon />}>Logout</DropdownItem>
         </div>
     );
 }
