@@ -68,3 +68,12 @@ def get_tasks_of_user(id):
         return tasks
     except Exception as e:
         raise
+
+# update a user
+def update_task(id, data):
+    try:
+        #update_result = users_dao.update_user(id, data)
+        update_result = tasks_dao.update(id=id, update_data=data)
+        return tasks_dao.findOne(id)
+    except Exception as e:
+        raise

@@ -13,8 +13,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # register blueprints
 from src.blueprints.userblueprint import user_blueprint
 from src.blueprints.taskblueprint import task_blueprint
+from src.blueprints.todoblueprint import todo_blueprint
 app.register_blueprint(blueprint=user_blueprint, url_prefix='/users')
 app.register_blueprint(blueprint=task_blueprint, url_prefix='/tasks')
+app.register_blueprint(blueprint=todo_blueprint, url_prefix='/todos')
 
 import src.controllers.usercontroller as usercont
 import src.controllers.taskcontroller as taskcont

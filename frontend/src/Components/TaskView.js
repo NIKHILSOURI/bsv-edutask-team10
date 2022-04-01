@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import './../Styles/TaskView.css'
 import './../Styles/Form.css'
+import Popup from './../Components/Popup'
+import TaskDetail from './TaskDetail'
 
 function TaskView(props) {
   function TaskItem(props) {
@@ -54,6 +56,8 @@ function TaskView(props) {
   }
 
   const [tasks, setTasks] = useState([])
+  const [focus, setFocus] = useState({})
+  const [trigger, setTrigger] = useState(false)
 
   useEffect(() => {
     updateTasks();
@@ -71,19 +75,30 @@ function TaskView(props) {
       });
   }
 
-  const convertTasks = (taskilst) => {
-    const convertedTasks = taskilst.map(item => {
-      return {
-        id: item._id['$oid'],
-        title: item.title,
-        description: item.description,
-        url: item.video.url
+  const convertTasks = (tasklist) => {
+    let convertedTasks = []
+    for(const task of tasklist) {
+      let todolist = []
+      for(const todo of task.todos) {
+        todolist.push({
+          _id: todo['_id']['$oid'],
+          description: todo.description,
+          done: todo.done
+        })
       }
-    });
+
+      convertedTasks.push({
+        _id: task['_id']['$oid'],
+        title: task.title,
+        description: task.description,
+        url: task.video.url,
+        todos: todolist
+      });
+    }
     setTasks(convertedTasks);
   }
 
-  return (
+  /*return (
       <div className='container'>
       {
         tasks.map(task => 
@@ -94,12 +109,38 @@ function TaskView(props) {
             </a>
           </TaskItem>)
       }
-
+      <Popup trigger={trigger} setTrigger={setTrigger}>
+          <h3>Hi</h3>
+        </Popup>
       <TaskItem id='newtask'>
         <TaskCreator userid={props.userid}/>
       </TaskItem>
     </div>
-  );
+  );*/
+  return (
+    <div className='container'>
+    {
+      tasks.map(task => 
+        <TaskItem id={task.id}>
+          <a onClick={() => {setTrigger(true); setFocus(task)}}>
+            <img src={`http://i3.ytimg.com/vi/${task.url}/hqdefault.jpg`} alt='' />
+            <div className="title-overlay">{task.title}</div>
+          </a>
+        </TaskItem>)
+    }
+
+    <TaskItem id='newtask'>
+      <TaskCreator userid={props.userid}/>
+    </TaskItem>
+
+    
+    {trigger && 
+      <Popup trigger={trigger} setTrigger={setTrigger}>
+        <TaskDetail task={focus} updateTasks={updateTasks}/>
+      </Popup>
+    }
+  </div>
+);
 }
 
 export default TaskView

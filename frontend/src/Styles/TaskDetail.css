@@ -1,0 +1,33 @@
+/* inline form for editable objects */
+.editable {
+    cursor: text;
+}
+
+.inline-form {
+    display: flex;
+    flex-direction: row;
+}
+
+.inline-form > input[type="text"] {
+    flex: 90%;
+    margin: 10px 10px 10px 0;
+}
+
+.inline-form > input[type="submit"] {
+    flex: 10%;
+}
+
+/* todo list */
+.todo-list > .todo-item {
+    padding: 12px 8px 12px 40px;
+}
+
+.todo-list > .todo-item:hover {
+    background-color: grey;
+}
+
+.todo-list > .todo-item > .remover {
+    position: relative;
+    right: 0;
+    top: 0;
+}

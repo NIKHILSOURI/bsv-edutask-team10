@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, abort, request
 from flask_cors import cross_origin
 
 from pymongo.errors import WriteError
+import json
 
 import src.controllers.taskcontroller as controller
 
@@ -33,15 +34,19 @@ def create():
 @task_blueprint.route('/byid/<id>', methods=['GET', 'PUT'])
 @cross_origin()
 def get(id):
-    if request.method == 'GET':
-        try:
+    try:
+        if request.method == 'GET':
             task = controller.get_task(id)
             return jsonify(task), 200
-        except Exception as e:
-            print(f'{e.__class__.__name__}: {e}')
-            abort(500, 'Unknown server error')
-    elif request.method == 'PUT':
-        abort(501)
+        elif request.method == 'PUT':
+            data = request.form.to_dict(flat=True)['data']
+            data = json.loads(data.replace("'", "\""))
+
+            task = controller.update_task(id, data)
+            return jsonify(task), 200
+    except Exception as e:
+        print(f'{e.__class__.__name__}: {e}')
+        abort(500, 'Unknown server error')
 
 # obtain all tasks associated to a specific user
 @task_blueprint.route('/ofuser/<id>', methods=['GET'])
