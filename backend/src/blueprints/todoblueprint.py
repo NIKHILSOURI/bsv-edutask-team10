@@ -25,21 +25,24 @@ def create():
         abort(500, 'Unknown server error')
 
 # obtain one user by id (and optionally update him)
-@todo_blueprint.route('/byid/<id>', methods=['GET', 'PUT'])
+@todo_blueprint.route('/byid/<id>', methods=['GET', 'PUT', 'DELETE'])
 @cross_origin()
 def get_todo(id):
     try:
-        # get a specific user
+        # get a specific todo
         if request.method == 'GET':
             todo = controller.get_todo(id)
             return jsonify(todo), 200
-        # update the user
+        # update the todo
         elif request.method == 'PUT':
             data = request.form.to_dict(flat=True)['data']
             data = json.loads(data.replace("'", "\""))
 
             todo = controller.update_todo(id, data)
             return jsonify(todo), 200
+        elif request.method == 'DELETE':
+            controller.delete_todo(id)
+            return jsonify({'id': id}), 200
     except Exception as e:
         print(f'{e.__class__.__name__}: {e}')
         abort(500, 'Unknown server error')

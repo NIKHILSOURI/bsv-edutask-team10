@@ -136,7 +136,7 @@ function TaskView(props) {
     
     {trigger && 
       <Popup trigger={trigger} setTrigger={setTrigger}>
-        <TaskDetail task={focus} updateTasks={updateTasks}/>
+        <TaskDetail taskid={focus._id} updateTasks={updateTasks}/>
       </Popup>
     }
   </div>

@@ -75,6 +75,15 @@ class DAO:
         except Exception as e:
             raise
 
+    def delete(self, id: str): 
+        try:
+            result = self.collection.delete_one(
+                {'_id': ObjectId(id)}
+            )
+            return result.acknowledged
+        except Exception as e:
+            raise
+
     # transform an object into a json object
     def to_json(self, data):
         return json.loads(json_util.dumps(data))

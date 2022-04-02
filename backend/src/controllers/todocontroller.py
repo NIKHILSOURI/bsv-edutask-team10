@@ -35,3 +35,10 @@ def update_todo(id, data):
         return update_result
     except Exception as e:
         raise
+
+def delete_todo(id):
+    try:
+        result = todos_dao.delete(id=id)
+        return result
+    except Exception as e:
+        raise
