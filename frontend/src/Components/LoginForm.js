@@ -32,7 +32,7 @@ function LoginForm({ Login, Signup }) {
                 <div></div>}
             <div className='inputwrapper'>
                 <label>Password</label>
-                <input type='text' id='password' name='password' disabled></input>
+                <input type='text' id='password' name='password' disabled placeholder='Password functionality not supported yet. Proceed the login/signup with the email address.'></input>
             </div>
 
             <input type="submit" value={issignup ? "Sign Up" : "Login"} disabled={credentials.email.length === 0}></input>

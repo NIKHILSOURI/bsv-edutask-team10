@@ -10,12 +10,13 @@ function TaskCreator(props) {
 
         const data = new URLSearchParams();
         data.append('title', title);
-        data.append('description', '');
+        data.append('description', '(add a description here)');
         data.append('userid', props.userid);
         data.append('url', url);
         data.append('todos', ['Watch video']);
 
-        console.log(props.userid);
+        setTitle("");
+        setUrl("");
 
         fetch('http://localhost:5000/tasks/create', {
             method: 'post',
@@ -31,20 +32,17 @@ function TaskCreator(props) {
             .catch(function (error) {
                 console.error(error)
             });
-
-        setTitle("");
-        setUrl("");
     }
 
     return (
-        <form className="submit-form" onSubmit={submitNewTask}>
+        <form className="submit-form bordered" onSubmit={submitNewTask}>
             <div className='inputwrapper'>
                 <label>Title</label>
-                <input type='text' id='title' name='title' onChange={event => setTitle(event.target.value)}></input>
+                <input type='text' id='title' name='title' onChange={event => setTitle(event.target.value)} value={title}></input>
             </div>
             <div className='inputwrapper'>
                 <label>YouTube URL</label>
-                <input type='text' id='url' name='url' onChange={event => setUrl(event.target.value)}></input>
+                <input type='text' id='url' name='url' onChange={event => setUrl(event.target.value)}value={url}></input>
             </div>
 
             <input type="submit" value="Create new Task" disabled={title.length === 0}></input>

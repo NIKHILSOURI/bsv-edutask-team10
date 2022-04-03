@@ -9,8 +9,7 @@ function NavBar(props) {
     return (
         <nav className="navbar">
             <ul className="navbar-nav">
-                <NavItem icon="😴" id='1'/>
-                <NavItem icon={<CaretIcon />} id='2'>
+                <NavItem icon={<CaretIcon />} id='1'>
                     <DropdownMenu Logout={props.Logout} />
                 </NavItem>
             </ul>

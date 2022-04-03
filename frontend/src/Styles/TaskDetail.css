@@ -24,7 +24,7 @@
 }
 
 .todo-list > .todo-item:hover {
-    background-color: grey;
+    background-color: rgb(210, 210, 210);
 }
 
 .todo-list > .todo-item > .checker {
@@ -68,6 +68,6 @@
 }
 
 .todo-list > .todo-item > .remover:hover {
-    background-color: #f44336;
+    background-color: var(--bg-bad);
     color: white;
 }

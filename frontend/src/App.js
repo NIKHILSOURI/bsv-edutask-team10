@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import './App.css'
 import TaskView from './Components/TaskView'
 import NavBar from './Components/NavBar'
@@ -14,14 +14,14 @@ function App() {
     data.append('lastName', details.lastName);
 
     fetch('http://localhost:5000/users/create', {
-        method: 'post', 
-        body: data
-      })
+      method: 'post',
+      body: data
+    })
       .then(res => res.json())
       .then(userobj => {
         userobj['_id'] = userobj['_id']['$oid'];
         setUser(userobj);
-      }).catch(function(error) {
+      }).catch(function (error) {
         console.error(error)
       });
   }
@@ -29,12 +29,11 @@ function App() {
   const login = (details) => {
     fetch(`http://localhost:5000/users/bymail/${details.email}`)
       .then(res => res.json())
-      // check if the user is valid
-      .then(u => {
-        u['_id'] = u['_id']['$oid'];
-        setUser(u);
+      .then(userobj => {
+        userobj['_id'] = userobj['_id']['$oid'];
+        setUser(userobj);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error(error)
       });
   }
@@ -42,22 +41,23 @@ function App() {
   const logout = (e) => {
     setUser({});
   }
-  
+
   return (
     <div>
       <NavBar Logout={logout} />
-      {(Object.keys(user).length === 0) ?
-        <div>
-          <h1>Login</h1>
-          <LoginForm Login={login} Signup={signup}/>
-        </div>
-        : 
-        <div>
-          <h1>Your tasks, {user.firstName} {user.lastName}</h1>
-          <TaskView
-            user={user}
-          />
-        </div>}
+
+      <div className='main'>
+        {(Object.keys(user).length === 0) ?
+          <div>
+            <h1>Login</h1>
+            <LoginForm Login={login} Signup={signup} />
+          </div>
+          :
+          <div>
+            <h1>Your tasks, {user.firstName} {user.lastName}</h1>
+            <TaskView user={user} />
+          </div>}
+      </div>
     </div>
   );
 }

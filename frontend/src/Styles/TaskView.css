@@ -2,6 +2,7 @@
 .container {
   display: flex;
   flex-flow: row wrap;
+  justify-content: center;
 }
 
 .container-element {
@@ -13,12 +14,16 @@
   text-align: center;
   align-items: center;
 
-  border: 1px solid grey;
-  border-radius: 5px;
+  
 }
 
 .container-element a, img {
   width: 100%
+}
+
+.bordered {
+  border: 1px solid grey;
+  border-radius: 5px;
 }
 
 /* hover-overlay for the title of a task card */
@@ -41,6 +46,33 @@
   opacity: 1;
 }
 
+.done-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: rgba(100, 100, 100, 0.7);
+  color: #f1f1f1;
+  opacity: 1;
+  color: white;
+  text-align: center;
+}
+
+.done-overlay > .done-check {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+
+  height: 40px;
+  width: 20px;
+
+  border-color: white;
+  border-style: solid;
+  border-width: 0px 5px 5px 0px;
+  transform: rotate(45deg);
+}
 
 
 /* MEDIA QUERIES */

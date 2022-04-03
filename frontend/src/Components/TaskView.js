@@ -45,6 +45,7 @@ function TaskView(props) {
           <div className='container-element' key={task.id}>
             <a onClick={() => { setTrigger(true); setFocus(task) }}>
               <img src={`http://i3.ytimg.com/vi/${task.url}/hqdefault.jpg`} alt='' />
+              { task.done ? <div className="done-overlay"><div className="done-check"></div></div> : <div></div>}
               <div className="title-overlay">{task.title}</div>
             </a>
           </div>)}
