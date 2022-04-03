@@ -3,6 +3,8 @@ import './../Styles/TaskDetail.css'
 
 import Editable from './Editable';
 
+import Converter from './../Util/Converter'
+
 function TaskDetail({ taskid, updateTasks }) {
     const [task, setTask] = useState(null);
     const [todos, setTodos] = useState([]);
@@ -19,30 +21,17 @@ function TaskDetail({ taskid, updateTasks }) {
         })
             .then(res => res.json())
             .then(tobj => {
-                let todolist = []
-                for (const todobj of tobj.todos) {
-                    todolist.push({
-                        _id: todobj['_id']['$oid'],
-                        description: todobj.description,
-                        done: todobj.done
-                    })
-                }
-                setTodos(todolist);
-                setTask({
-                    _id: tobj['_id']['$oid'],
-                    title: tobj.title,
-                    description: tobj.description,
-                    url: tobj.video.url
-                });
+                let converted = Converter.convertTask(tobj);
+                setTask(converted);
+                setTodos(converted.todos);
             })
+            .catch(function (error) {
+                console.error(error)
+            });
     }
 
     const addTodo = (e) => {
         e.preventDefault();
-
-        if (todo === "") {
-            return;
-        }
 
         const data = new URLSearchParams();
         data.append('taskid', task._id);
@@ -54,15 +43,13 @@ function TaskDetail({ taskid, updateTasks }) {
             headers: { 'Cache-Control': 'no-cache' }
         })
             .then(res => res.json())
-            .then(todoobj => {
-                updateTask();
-
-                // reset todo
-                setTodo("");
-            })
+            .then(todoobj => updateTask())
             .catch(function (error) {
                 console.error(error)
             });
+
+        
+        setTodo("");
     }
 
     const toggleTodo = (todo) => {
@@ -76,7 +63,10 @@ function TaskDetail({ taskid, updateTasks }) {
         })
             .then(res => res.json())
             .then(updateTask())
-            //.then(updateTasks())
+            .catch(function (error) {
+                console.error(error)
+            });
+
     }
 
     const deleteTodo = (todo) => {
@@ -85,41 +75,44 @@ function TaskDetail({ taskid, updateTasks }) {
             headers: { 'Cache-Control': 'no-cache' }
         })
             .then(res => res.json())
-            .then(res => console.log(res))
             .then(updateTask())
+            .catch(function (error) {
+                console.error(error)
+            });
+
     }
 
     return (
-        task == null ? 
-        <p>Loading</p> :
-        <div>
-            <h1>
-                <Editable objectname="tasks" object={task} variablename="title" updateTasks={updateTasks} />
-            </h1>
+        task == null ?
+            <p>Loading</p> :
+            <div>
+                <h1>
+                    <Editable objectname="tasks" object={task} variablename="title" updateTasks={updateTasks} />
+                </h1>
 
-            <p>
-                <Editable objectname="tasks" object={task} variablename="description" updateTasks={updateTasks} />
-            </p>
+                <p>
+                    <Editable objectname="tasks" object={task} variablename="description" updateTasks={updateTasks} />
+                </p>
 
-            <a href={`https://www.youtube.com/watch?v=${task.url}`} target='_blank' rel="noreferrer">
-                <img src={`http://i3.ytimg.com/vi/${task.url}/hqdefault.jpg`} alt='' />
-            </a>
-            <ul className='todo-list'>
-                {todos.map(todo =>
-                    <li key={todo._id} className='todo-item'>
-                        <span className={'checker ' + (todo.done ? 'checked' : 'unchecked')} onClick={() => toggleTodo(todo)}></span>
-                        <Editable objectname="todos" object={todo} variablename="description" updateTasks={updateTasks} />
-                        <span className='remover' onClick={() => deleteTodo(todo)}>&#x2716;</span>
-                    </li>)
-                }
-                <li key='newtodo'>
-                    <form onSubmit={addTodo} className='inline-form'>
-                        <input type='text' onChange={e => setTodo(e.target.value)} value={todo} placeholder='Add a new todo item'></input>
-                        <input type='submit' value='Add'></input>
-                    </form>
-                </li>
-            </ul>
-        </div>
+                <a href={`https://www.youtube.com/watch?v=${task.url}`} target='_blank' rel="noreferrer">
+                    <img src={`http://i3.ytimg.com/vi/${task.url}/hqdefault.jpg`} alt='' />
+                </a>
+                <ul className='todo-list'>
+                    {todos.map(todo =>
+                        <li key={todo._id} className='todo-item'>
+                            <span className={'checker ' + (todo.done ? 'checked' : 'unchecked')} onClick={() => toggleTodo(todo)}></span>
+                            <Editable objectname="todos" object={todo} variablename="description" updateTasks={updateTasks} />
+                            <span className='remover' onClick={() => deleteTodo(todo)}>&#x2716;</span>
+                        </li>)
+                    }
+                    <li key='newtodo'>
+                        <form onSubmit={addTodo} className='inline-form'>
+                            <input type='text' onChange={e => setTodo(e.target.value)} value={todo} placeholder='Add a new todo item'></input>
+                            <input type='submit' value='Add' disabled={todo.length === 0}></input>
+                        </form>
+                    </li>
+                </ul>
+            </div>
     );
 }
 
