@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 from  src.util.dao import DAO
 
 dao = DAO(collection_name='user')

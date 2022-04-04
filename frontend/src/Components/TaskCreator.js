@@ -45,11 +45,11 @@ function TaskCreator(props) {
         <form className="submit-form bordered" onSubmit={submitNewTask}>
             <div className='inputwrapper'>
                 <label>Title</label>
-                <input type='text' id='title' name='title' onChange={event => setTitle(event.target.value)} value={title}></input>
+                <input type='text' id='title' name='title' onChange={event => setTitle(event.target.value)} value={title} placeholder='Title of your Task'></input>
             </div>
             <div className='inputwrapper'>
                 <label>YouTube URL</label>
-                <input type='text' id='url' name='url' onChange={event => setUrl(event.target.value)}value={url}></input>
+                <input type='text' id='url' name='url' onChange={event => setUrl(event.target.value)} value={url} placeholder='Viewkey of a YouTube video (the part after /watch?v= in the URL), e.g., dQw4w9WgXcQ'></input>
             </div>
 
             <input type="submit" value="Create new Task" disabled={title.length === 0}></input>
