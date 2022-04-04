@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://root:root@mongodb:27017
+      - FLASK_BIND_IP=0.0.0.0
+    ports:
+      - "5000:5000"
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=rootDb
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - "27017:27017"
+    command: mongod --bind_ip_all
