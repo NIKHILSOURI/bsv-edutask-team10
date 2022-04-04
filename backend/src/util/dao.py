@@ -4,7 +4,7 @@ import os
 # instantiate pymongo and create a connection to the database
 import pymongo
 client = pymongo.MongoClient(os.environ.get('MONGO_URL'))
-database = client.todo_list
+database = client.edutask
 
 # create a data access object
 from src.util import validators
@@ -16,8 +16,6 @@ from bson.objectid import ObjectId
 class DAO:
 
     def __init__(self, collection_name: str):
-        client = pymongo.MongoClient(os.environ.get('MONGO_URL'))
-        database = client.todo_list
         validator = validators.get(collection_name)
         # create the collection if it does not yet exist
         if collection_name not in database.list_collection_names():
