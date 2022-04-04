@@ -65,6 +65,7 @@ class DAO:
         except Exception as e:
             raise
 
+    # update an existing entry
     def update(self, id: str, update_data: dict):
         try:
             update_result = self.collection.update_one(
@@ -75,6 +76,7 @@ class DAO:
         except Exception as e:
             raise
 
+    # delete an existing entry
     def delete(self, id: str): 
         try:
             result = self.collection.delete_one(

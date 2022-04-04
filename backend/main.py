@@ -21,11 +21,13 @@ app.register_blueprint(blueprint=todo_blueprint, url_prefix='/todos')
 import src.controllers.usercontroller as usercont
 import src.controllers.taskcontroller as taskcont
 
+# simple heartbeat method to check if the server is running
 @app.route('/')
 @cross_origin()
 def ping():
     return jsonify({'version': os.environ.get('VERSION')}), 200
 
+# simple population method that adds initial data to the database
 @app.route('/populate', methods=['POST'])
 @cross_origin()
 def populate():
@@ -54,7 +56,7 @@ def populate():
 
     return jsonify({'response': 'ok'}), 200
 
+# main loop
 if __name__ == '__main__':
-    #populate()
     print(app.url_map)
     app.run()

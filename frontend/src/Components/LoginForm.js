@@ -5,6 +5,11 @@ function LoginForm({ Login, Signup }) {
     const [issignup, setIssignup] = useState(false);
     const [credentials, setCredentials] = useState({email: '', firstName: '', lastName: ''});
 
+    /**
+     * Take the stored credentials from the input and process them
+     * @param {*} e Event from the form submit
+     * @param {function} fun Either login or signup
+     */
     const submitHandler = (e, fun) => {
         e.preventDefault();
 

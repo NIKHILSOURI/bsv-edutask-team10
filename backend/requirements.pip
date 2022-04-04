@@ -7,3 +7,6 @@ markupsafe
 pymongo
 werkzeug
 python-dotenv
+
+pytest
+pytest-cov

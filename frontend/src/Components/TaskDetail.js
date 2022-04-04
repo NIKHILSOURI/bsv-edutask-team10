@@ -14,6 +14,9 @@ function TaskDetail({ taskid, updateTasks }) {
         updateTask();
     }, []);
 
+    /**
+     * Re-fetch the current task from the server once more
+     */
     const updateTask = () => {
         fetch(`http://localhost:5000/tasks/byid/${taskid}`, {
             method: 'get',
@@ -30,6 +33,10 @@ function TaskDetail({ taskid, updateTasks }) {
             });
     }
 
+    /**
+     * Add a todo item to the list
+     * @param {*} e Event from the form submit
+     */
     const addTodo = (e) => {
         e.preventDefault();
 
@@ -53,6 +60,10 @@ function TaskDetail({ taskid, updateTasks }) {
         setTodo("");
     }
 
+    /**
+     * Toggle the "done" status of a given todo object
+     * @param {*} todo Todo object which is toggled
+     */
     const toggleTodo = (todo) => {
         const data = new URLSearchParams();
         data.append('data', `{'$set': {'done': ${!todo.done}}}`);
@@ -71,6 +82,10 @@ function TaskDetail({ taskid, updateTasks }) {
 
     }
 
+    /**
+     * Delete an existing todo object
+     * @param {*} todo Todo object which is deleted
+     */
     const deleteTodo = (todo) => {
         fetch(`http://localhost:5000/todos/byid/${todo._id}`, {
             method: 'delete',

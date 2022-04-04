@@ -5,9 +5,14 @@ function TaskCreator(props) {
     const [title, setTitle] = useState("")
     const [url, setUrl] = useState("")
 
+    /**
+     * Create a new task with the {title} and {url}
+     * @param {*} event Event object from the form submit
+     */
     const submitNewTask = (event) => {
         event.preventDefault();
 
+        // create a forms object
         const data = new URLSearchParams();
         data.append('title', title);
         data.append('description', '(add a description here)');
@@ -15,9 +20,11 @@ function TaskCreator(props) {
         data.append('url', url);
         data.append('todos', ['Watch video']);
 
+        // reset the form values
         setTitle("");
         setUrl("");
 
+        // send a request to the server creating the new task
         fetch('http://localhost:5000/tasks/create', {
             method: 'post',
             body: data

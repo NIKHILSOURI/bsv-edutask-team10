@@ -40,6 +40,7 @@ def get_todo(id):
 
             todo = controller.update_todo(id, data)
             return jsonify(todo), 200
+        # delete an existing todo
         elif request.method == 'DELETE':
             controller.delete_todo(id)
             return jsonify({'id': id}), 200

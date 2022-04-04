@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './App.css'
+import './Styles/App.css'
 import TaskView from './Components/TaskView'
 import NavBar from './Components/NavBar'
 import LoginForm from './Components/LoginForm'
@@ -7,12 +7,18 @@ import LoginForm from './Components/LoginForm'
 function App() {
   const [user, setUser] = useState({})
 
+  /**
+   * Perform the signup of a new user
+   * @param {*} details Dict containing at least the email, first name and last name of the new user
+   */
   const signup = (details) => {
+    // create a forms object
     const data = new URLSearchParams();
     data.append('email', details.email);
     data.append('firstName', details.firstName);
     data.append('lastName', details.lastName);
 
+    // send a request to the server creating a new user
     fetch('http://localhost:5000/users/create', {
       method: 'post',
       body: data
@@ -26,6 +32,10 @@ function App() {
       });
   }
 
+  /**
+   * Login to an existing account by providing the email address of an existing user
+   * @param {*} details Dict contaiing at least the email address of a user
+   */
   const login = (details) => {
     fetch(`http://localhost:5000/users/bymail/${details.email}`)
       .then(res => res.json())
@@ -38,7 +48,10 @@ function App() {
       });
   }
 
-  const logout = (e) => {
+  /**
+   * Reset the authentication of the user
+   */
+  const logout = () => {
     setUser({});
   }
 

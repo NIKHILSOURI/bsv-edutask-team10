@@ -9,8 +9,6 @@ todos_dao = DAO(collection_name='todo')
 users_dao = DAO(collection_name='user')
 
 # create a new task
-
-
 def create_task(data):
     try:
         # store the user id
@@ -20,8 +18,6 @@ def create_task(data):
         # fill default values for missing values
         if 'startdate' not in data:
             data['startdate'] = datetime.today()
-        # if 'duedate' not in data:
-        #    data['duedate'] = None
         if 'categories' not in data:
             data['categories'] = []
 
@@ -46,8 +42,6 @@ def create_task(data):
         raise
 
 # get a task by id
-
-
 def get_task(id):
     try:
         # find the task
@@ -71,7 +65,7 @@ def get_tasks_of_user(id):
     except Exception as e:
         raise
 
-
+# helper method to populate the values of related elements
 def populate_task(task):
     # populate the video of the task
     video = videos_dao.findOne(task['video']['$oid'])
@@ -82,8 +76,6 @@ def populate_task(task):
     task['todos'] = todos
 
 # update a user
-
-
 def update_task(id, data):
     try:
         #update_result = users_dao.update_user(id, data)

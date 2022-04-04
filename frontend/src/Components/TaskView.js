@@ -13,10 +13,16 @@ function TaskView(props) {
   const [focus, setFocus] = useState({})
   const [trigger, setTrigger] = useState(false)
 
+  /**
+   * At startup, retrieve all tasks of the registered user
+   */
   useEffect(() => {
     updateTasks();
   }, []);
 
+  /**
+   * Fetch all tasks associated to this user from the server
+   */
   const updateTasks = () => {
     fetch(`http://localhost:5000/tasks/ofuser/${props.user._id}`, {
       method: 'get',

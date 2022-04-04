@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from  src.util.dao import DAO
 
 dao = DAO(collection_name='user')
@@ -19,6 +20,9 @@ def get_user(id):
 # get a user by his email
 def get_user_by_email(email):
     try:
+        if '@' not in email:
+            raise ValueError('Error: invalid email address')
+
         users = dao.find({'email': email})
         if len(users) == 0:
             return None

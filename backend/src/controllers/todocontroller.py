@@ -4,7 +4,7 @@ from  src.util.dao import DAO
 todos_dao = DAO(collection_name='todo')
 tasks_dao = DAO(collection_name='task')
 
-# create a new user
+# create a new todo item
 def create_todo(data):
     try:
         if 'taskid' in data:
@@ -20,22 +20,22 @@ def create_todo(data):
     except Exception as e:
         raise
 
-# get a user by id
+# get a todo item by id
 def get_todo(id):
     try:
         return todos_dao.findOne(id)
     except Exception as e:
         raise
 
-# update a user
+# update a todo item
 def update_todo(id, data):
     try:
-        #update_result = users_dao.update_user(id, data)
         update_result = todos_dao.update(id=id, update_data=data)
         return update_result
     except Exception as e:
         raise
 
+# delete a todo utem
 def delete_todo(id):
     try:
         result = todos_dao.delete(id=id)
