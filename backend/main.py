@@ -59,4 +59,8 @@ def populate():
 # main loop
 if __name__ == '__main__':
     print(app.url_map)
-    app.run()
+    if (os.environ.get('FLASK_BIND_IP')):
+        app.run(host=os.environ.get('FLASK_BIND_IP'))
+    else:
+        app.run()
+    
