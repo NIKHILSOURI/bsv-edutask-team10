@@ -1,5 +1,6 @@
 # coding=utf-8
 import os
+from dotenv import dotenv_values
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
@@ -25,7 +26,8 @@ import src.controllers.taskcontroller as taskcont
 @app.route('/')
 @cross_origin()
 def ping():
-    return jsonify({'version': os.environ.get('VERSION')}), 200
+    VERSION = dotenv_values('.env').get('VERSION')
+    return jsonify({'version': VERSION}), 200
 
 # simple population method that adds initial data to the database
 @app.route('/populate', methods=['POST'])

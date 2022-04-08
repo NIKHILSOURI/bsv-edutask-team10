@@ -1,10 +1,8 @@
 # coding=utf-8
 import os
 
-# instantiate pymongo and create a connection to the database
 import pymongo
-client = pymongo.MongoClient(os.environ.get('MONGO_URL'))
-database = client.edutask
+from dotenv import dotenv_values
 
 # create a data access object
 from src.util import validators
@@ -16,6 +14,16 @@ from bson.objectid import ObjectId
 class DAO:
 
     def __init__(self, collection_name: str):
+        # load the local mongo URL (something like mongodb://localhost:27017)
+        LOCAL_MONGO_URL = dotenv_values('.env').get('MONGO_URL')
+        # check out of the environment (which can be overridden by the docker-compose file) also specifies an URL, and use that instead if it exists
+        MONGO_URL = os.environ.get('MONGO_URL', LOCAL_MONGO_URL)
+
+        # connect to the MongoDB and select the appropriate database
+        print(f'Connecting to collection {collection_name} on MongoDB at url {MONGO_URL}')
+        client = pymongo.MongoClient(MONGO_URL)
+        database = client.edutask
+
         validator = validators.get(collection_name)
         # create the collection if it does not yet exist
         if collection_name not in database.list_collection_names():
