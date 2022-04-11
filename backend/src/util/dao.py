@@ -5,7 +5,7 @@ import pymongo
 from dotenv import dotenv_values
 
 # create a data access object
-from src.util import validators
+from src.util.validators import getValidator
 
 import json
 from bson import json_util
@@ -24,7 +24,7 @@ class DAO:
         client = pymongo.MongoClient(MONGO_URL)
         database = client.edutask
 
-        validator = validators.get(collection_name)
+        validator = getValidator(collection_name)
         # create the collection if it does not yet exist
         if collection_name not in database.list_collection_names():
             database.create_collection(collection_name, validator=validator)
@@ -33,13 +33,22 @@ class DAO:
 
     # create a new entry
     def create(self, data):
-        # insert the object into the database and return the created object
+        # preprocess the data: trim strings, make list items unique
+        for key in data:
+            if isinstance(data[key], str):
+                data[key] = data[key].strip()
+            if isinstance(data[key], list):
+                data[key] = list(set(data[key]))
+
+        # insert the object into the database
         try:
             inserted_id = self.collection.insert_one(data).inserted_id
-            obj = self.collection.find_one({ '_id': ObjectId(inserted_id) })
-            return self.to_json(obj)
         except Exception as e:
             raise
+
+        # return the created object
+        obj = self.collection.find_one({ '_id': inserted_id })
+        return self.to_json(obj)
 
     # find one specific object by id
     def findOne(self, id: str):

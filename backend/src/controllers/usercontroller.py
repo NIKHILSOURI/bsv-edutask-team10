@@ -1,50 +1,46 @@
-from  src.util.dao import DAO
+from src.controllers.controller import Controller
+from src.util.dao import DAO
 
-dao = DAO(collection_name='user')
+import re
+emailValidator = re.compile(r'.*@.*')
 
-# create a new user
-def create_user(data):
-    try:
-        return dao.create(data)
-    except Exception as e:
-        raise
+class UserController(Controller):
+    def __init__(self, dao: DAO):
+        super().__init__(dao=dao)
 
-# get a user by id
-def get_user(id):
-    try:
-        return dao.findOne(id)
-    except Exception as e:
-        raise
+    def get_user_by_email(self, email: str):
+        """Given a valid email address of an existing account, return the user object contained in the database associated 
+        to that user. For now, do not assume that the email attribute is unique. Output an error message containing the email
+        address if the search returns multiple users.
+        
+        parameters:
+            email -- an email address string 
 
-# get a user by his email
-def get_user_by_email(email):
-    try:
-        if '@' not in email:
+        returns:
+            user -- the user object associated to that email address (if multiple users are associated to that email: return the first one)
+            None -- if no user is associated to that email address
+
+        raises:
+            ValueError -- in case the email parameter is not valid (i.e., conforming <local-part>@<domain>.<host>)
+            Exception -- in case any database operation fails
+        """
+
+        if not re.fullmatch(emailValidator, email):
             raise ValueError('Error: invalid email address')
 
-        users = dao.find({'email': email})
-        if len(users) == 0:
-            return None
-        elif len(users) > 1:
-            print(f'Error: more than one user found with mail {email}')
-            return users[0]
-        # exactly one user was found
-        return users[0]
-    except Exception as e:
-        raise
+        try:
+            users = self.dao.find({'email': email})
+            if len(users) == 1:
+                return users[0]
+            else:
+                print(f'Error: more than one user found with mail {email}')
+                return users[0]
+        except Exception as e:
+            raise
 
-# get all users
-def get_all_users():
-    try:
-        return dao.find()
-    except Exception as e:
-        raise
-
-# update a user
-def update_user(id, data):
-    try:
-        #update_result = users_dao.update_user(id, data)
-        update_result = dao.update(id=id, update_data={'$set': data})
-        return update_result
-    except Exception as e:
-        raise
+    def update(self, id, data):
+        try:
+            update_result = super().update(id=id, data={'$set': data})
+            return update_result
+        except Exception as e:
+            raise

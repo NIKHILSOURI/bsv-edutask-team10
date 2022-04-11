@@ -1,44 +1,36 @@
-from bson.objectid import ObjectId
+from src.controllers.controller import Controller
 from  src.util.dao import DAO
 
-todos_dao = DAO(collection_name='todo')
-tasks_dao = DAO(collection_name='task')
+from bson.objectid import ObjectId
 
-# create a new todo item
-def create_todo(data):
-    try:
-        if 'taskid' in data:
-            task = tasks_dao.findOne(id=data['taskid'])
-            del data['taskid']
+class TodoController(Controller):
+    def __init__(self, todo_dao: DAO, tasks_dao: DAO):
+        super().__init__(dao=todo_dao)
+        self.tasks_dao = tasks_dao
 
-            todo = todos_dao.create(data)
-            tasks_dao.update(id=task['_id']['$oid'], update_data={'$push' : {'todos': ObjectId(todo['_id']['$oid'])}})
+    def create(self, data: dict):
+        """Given a valid dict containing the data of the new todo item create a new todo item and return the newly created item. If in addition a taskid attribute is given, then the new todo object will be automatically associated to the task object.
 
-            return todo
-        else:
-            return todos_dao.create(data)
-    except Exception as e:
-        raise
+        parameters: 
+            data -- dict containing a description under the key description
 
-# get a todo item by id
-def get_todo(id):
-    try:
-        return todos_dao.findOne(id)
-    except Exception as e:
-        raise
+        returns:
+            todo -- created todo object upon success
+        
+        raises:
+            Exception -- in case any database operation fails
+        """
 
-# update a todo item
-def update_todo(id, data):
-    try:
-        update_result = todos_dao.update(id=id, update_data=data)
-        return update_result
-    except Exception as e:
-        raise
+        try:
+            if 'taskid' in data:
+                task = self.tasks_dao.findOne(id=data['taskid'])
+                del data['taskid']
 
-# delete a todo utem
-def delete_todo(id):
-    try:
-        result = todos_dao.delete(id=id)
-        return result
-    except Exception as e:
-        raise
+                todo = self.dao.create(data)
+                self.tasks_dao.update(id=task['_id']['$oid'], update_data={'$push' : {'todos': ObjectId(todo['_id']['$oid'])}})
+
+                return todo
+            else:
+                return self.dao.create(data)
+        except Exception as e:
+            raise

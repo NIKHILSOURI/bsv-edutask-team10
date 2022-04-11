@@ -3,7 +3,9 @@ from flask_cors import cross_origin
 
 from pymongo.errors import WriteError
 
-import src.controllers.usercontroller as controller
+from src.controllers.usercontroller import UserController
+from src.util.daos import getDao
+controller = UserController(getDao(collection_name='user'))
 
 # instantiate the flask blueprint
 user_blueprint = Blueprint('user_blueprint', __name__)
@@ -15,7 +17,7 @@ def create_user():
     data = request.form.to_dict()
     user = None
     try:
-        user = controller.create_user(data)
+        user = controller.create(data)
         return jsonify(user)
     except WriteError as e:
         abort(400, 'Invalid input data')
@@ -30,13 +32,13 @@ def get_user(id):
     try:
         # get a specific user
         if request.method == 'GET':
-            user = controller.get_user(id)
+            user = controller.get(id)
             return jsonify(user), 200
         # update the user
         elif request.method == 'PUT':
             data = request.form
-            update_result = controller.update_user(id, data)
-            user = controller.get_user(id)
+            update_result = controller.update(id, data)
+            user = controller.get(id)
             return jsonify(user), 200
     except Exception as e:
         print(f'{e.__class__.__name__}: {e}')
@@ -58,7 +60,7 @@ def get_user_by_mail(email):
 @cross_origin()
 def get_users():
     try:
-        users = controller.get_all_users()
+        users = controller.get_all()
         return jsonify(users), 200
     except Exception as e:
         print(f'{e.__class__.__name__}: {e}')

@@ -4,7 +4,10 @@ from flask_cors import cross_origin
 from pymongo.errors import WriteError
 import json
 
-import src.controllers.taskcontroller as controller
+#import src.controllers.taskcontroller as controller
+from src.controllers.taskcontroller import TaskController
+from src.util.daos import getDao
+controller = TaskController(tasks_dao=getDao(collection_name='task'), videos_dao=getDao(collection_name='video'), todos_dao=getDao(collection_name='todo'), users_dao=getDao(collection_name='user'))
 
 # instantiate the flask blueprint
 task_blueprint = Blueprint('task_blueprint', __name__)
@@ -21,7 +24,7 @@ def create():
             if key in data and isinstance(data[key], list):
                 data[key] = data[key][0]
 
-        taskid = controller.create_task(data)
+        taskid = controller.create(data)
         tasks = controller.get_tasks_of_user(userid)
         return jsonify(tasks), 200
     except WriteError as e:
@@ -36,13 +39,13 @@ def create():
 def get(id):
     try:
         if request.method == 'GET':
-            task = controller.get_task(id)
+            task = controller.get(id)
             return jsonify(task), 200
         elif request.method == 'PUT':
             data = request.form.to_dict(flat=True)['data']
             data = json.loads(data.replace("'", "\""))
 
-            task = controller.update_task(id, data)
+            task = controller.update(id, data)
             return jsonify(task), 200
     except Exception as e:
         print(f'{e.__class__.__name__}: {e}')

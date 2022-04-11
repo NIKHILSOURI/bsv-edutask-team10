@@ -5,7 +5,9 @@ import json
 
 from pymongo.errors import WriteError
 
-import src.controllers.todocontroller as controller
+from src.controllers.todocontroller import TodoController
+from src.util.daos import getDao
+controller = TodoController(todo_dao=getDao(collection_name='todo'), tasks_dao=getDao(collection_name='task'))
 
 # instantiate the flask blueprint
 todo_blueprint = Blueprint('todo_blueprint', __name__)
@@ -16,7 +18,7 @@ todo_blueprint = Blueprint('todo_blueprint', __name__)
 def create():
     try:
         data = request.form.to_dict(flat=True)
-        todo = controller.create_todo(data)
+        todo = controller.create(data)
         return jsonify(todo), 200
     except WriteError as e:
         abort(400, 'Invalid input data')
@@ -31,18 +33,18 @@ def get_todo(id):
     try:
         # get a specific todo
         if request.method == 'GET':
-            todo = controller.get_todo(id)
+            todo = controller.get(id)
             return jsonify(todo), 200
         # update the todo
         elif request.method == 'PUT':
             data = request.form.to_dict(flat=True)['data']
             data = json.loads(data.replace("'", "\""))
 
-            todo = controller.update_todo(id, data)
+            todo = controller.update(id, data)
             return jsonify(todo), 200
         # delete an existing todo
         elif request.method == 'DELETE':
-            controller.delete_todo(id)
+            controller.delete(id)
             return jsonify({'id': id}), 200
     except Exception as e:
         print(f'{e.__class__.__name__}: {e}')
