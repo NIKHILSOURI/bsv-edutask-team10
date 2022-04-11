@@ -19,6 +19,7 @@ services:
     environment:
       - MONGO_URL=mongodb://root:root@mongodb:27017
       - FLASK_BIND_IP=0.0.0.0
+      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
   frontend:
