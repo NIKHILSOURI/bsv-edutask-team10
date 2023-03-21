@@ -31,3 +31,4 @@ yarn-error.log*
 data/db/
 *.coverage
 backend/.venv/
+backend/test/solutions/
