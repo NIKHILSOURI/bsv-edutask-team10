@@ -5,7 +5,8 @@
         "properties": {
             "title": {
                 "bsonType": "string",
-                "description": "the title of a task must be determined"
+                "description": "the title of a task must be determined",
+                "uniqueItems": true
             }, 
             "description": {
                 "bsonType": "string",
@@ -19,21 +20,18 @@
             },
             "requires": {
                 "bsonType": "array",
-                "uniqueItems": true,
                 "items": {
                     "bsonType": "objectId"
                 }
             },
             "categories": {
                 "bsonType": "array",
-                "uniqueItems": true,
                 "items": {
                     "bsonType": "string"
                 }
             },
             "todos": {
                 "bsonType": "array",
-                "uniqueItems": true,
                 "items": {
                     "bsonType": "objectId"
                 }

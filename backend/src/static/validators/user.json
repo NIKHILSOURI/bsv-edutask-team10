@@ -13,11 +13,11 @@
             },
             "email": {
                 "bsonType": "string",
-                "description": "the email address of a user must be determined"
+                "description": "the email address of a user must be determined",
+                "uniqueItems": true
             },
             "tasks": {
                 "bsonType": "array",
-                "uniqueItems": true,
                 "items": {
                     "bsonType": "objectId"
                 }
