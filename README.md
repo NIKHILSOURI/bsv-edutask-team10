@@ -1,6 +1,6 @@
 # Edutask: a Training System for PA1417
 
-This is the codebase for **edutask**, a simple web-based application where users can sign up, add YouTube videos to a watchlist, and associate these videos with todo lists in order to keep track of educational material. The application consists of a database using MongoDB, a server using Flask, and a graphical user interface using React.
+This is the codebase for **edutask**, a simple web-based application where users can sign up, add YouTube videos to a watchlist, and associate these videos with todo lists in order to keep track of educational material. The application consists of a database using MongoDB, a server using Flask, and a graphical user interface using React. You can find more information in the [specification](./documentation/edutask-specification.pdf).
 
 Please keep the following in mind:
 
