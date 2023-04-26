@@ -2,6 +2,7 @@ describe('Logging into the system', () => {
   // define variables that we need on multiple occasions
   let uid // user id
   let name // name of the user (firstName + ' ' + lastName)
+  let email // email of the user
 
   before(function () {
     // create a fabricated user from a fixture
@@ -15,6 +16,7 @@ describe('Logging into the system', () => {
         }).then((response) => {
           uid = response.body._id.$oid
           name = user.firstName + ' ' + user.lastName
+          email = user.email
         })
       })
   })
@@ -34,10 +36,10 @@ describe('Logging into the system', () => {
     // detect a div which contains "Email Address", find the input and type (in a declarative way)
     cy.contains('div', 'Email Address')
       .find('input[type=text]')
-      .type('mon.doe@gmail.com')
+      .type(email)
     // alternative, imperative way of detecting that input field
     //cy.get('.inputwrapper #email')
-    //    .type('mon.doe@gmail.com')
+    //    .type(email)
 
     // submit the form on this page
     cy.get('form')
