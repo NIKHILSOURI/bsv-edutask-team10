@@ -18,7 +18,7 @@ function TaskDetail({ taskid, updateTasks }) {
      * Re-fetch the current task from the server once more
      */
     const updateTask = () => {
-        fetch(`http://localhost:5000/tasks/byid/${taskid}`, {
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/tasks/byid/${taskid}`, {
             method: 'get',
             headers: { 'Cache-Control': 'no-cache' }
         })
@@ -44,7 +44,7 @@ function TaskDetail({ taskid, updateTasks }) {
         data.append('taskid', task._id);
         data.append('description', todo);
 
-        fetch('http://localhost:5000/todos/create', {
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/todos/create`, {
             method: 'post',
             body: data,
             headers: { 'Cache-Control': 'no-cache' }
@@ -68,7 +68,7 @@ function TaskDetail({ taskid, updateTasks }) {
         const data = new URLSearchParams();
         data.append('data', `{'$set': {'done': ${!todo.done}}}`);
 
-        fetch(`http://localhost:5000/todos/byid/${todo._id}`, {
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/todos/byid/${todo._id}`, {
             method: 'put',
             body: data,
             headers: { 'Cache-Control': 'no-cache' }

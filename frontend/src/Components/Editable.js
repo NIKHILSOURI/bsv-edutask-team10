@@ -18,7 +18,7 @@ function Editable({ objectname, object, variablename, updateTasks }) {
         data.append('data', `{'$set': {'${variablename}': '${text}'}}`);
 
         // send a request to the server updating the given field
-        fetch(`http://localhost:5000/${objectname}/byid/${object._id}`, {
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/${objectname}/byid/${object._id}`, {
             method: 'put',
             body: data,
             headers: {'Cache-Control': 'no-cache'}

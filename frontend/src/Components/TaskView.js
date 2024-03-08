@@ -24,7 +24,7 @@ function TaskView(props) {
    * Fetch all tasks associated to this user from the server
    */
   const updateTasks = () => {
-    fetch(`http://localhost:5000/tasks/ofuser/${props.user._id}`, {
+    fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/tasks/ofuser/${props.user._id}`, {
       method: 'get',
       headers: { 'Cache-Control': 'no-cache' }
     })

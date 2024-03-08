@@ -25,7 +25,7 @@ function TaskCreator(props) {
         setUrl("");
 
         // send a request to the server creating the new task
-        fetch('http://localhost:5000/tasks/create', {
+        fetch(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/tasks/create`, {
             method: 'post',
             body: data
         }).then(res => res.json())
