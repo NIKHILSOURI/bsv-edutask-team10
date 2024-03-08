@@ -1,6 +1,7 @@
 # coding=utf-8
 import os, json
-from dotenv import dotenv_values
+from dotenv import dotenv_values, load_dotenv
+load_dotenv()
 
 from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
@@ -66,9 +67,14 @@ def populate():
 
 # main loop
 if __name__ == '__main__':
+    # print the URL map, which lists all API endpoints of this flask server
     print(app.url_map)
+
+    host = '0.0.0.0'
     if (os.environ.get('FLASK_BIND_IP')):
-        app.run(host=os.environ.get('FLASK_BIND_IP'))
-    else:
-        app.run()
+        # in case the environment variables contain a different IP address, overwrite the host value
+        host = os.environ.get('FLASK_BIND_IP')
+
+    port = os.environ.get('PORT')
+    app.run(host, port)
     
