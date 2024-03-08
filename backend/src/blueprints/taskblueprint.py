@@ -34,7 +34,7 @@ def create():
         abort(500, 'Unknown server error')
 
 # get or update a specific task
-@task_blueprint.route('/byid/<id>', methods=['GET', 'PUT'])
+@task_blueprint.route('/byid/<id>', methods=['GET', 'PUT', 'DELETE'])
 @cross_origin()
 def get(id):
     try:
@@ -47,6 +47,9 @@ def get(id):
 
             task = controller.update(id, data)
             return jsonify(task), 200
+        elif request.method == 'DELETE':
+            result = controller.delete(id=id)
+            return jsonify({"success": result}), 200
     except Exception as e:
         print(f'{e.__class__.__name__}: {e}')
         abort(500, 'Unknown server error')
