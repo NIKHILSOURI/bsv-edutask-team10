@@ -11,6 +11,7 @@ services:
     ports:
       - "27017:27017"
     command: mongod --bind_ip_all
+
   backend:
     build: ./backend
     container_name: edutask-backend
@@ -20,8 +21,10 @@ services:
       - MONGO_URL=mongodb://root:root@mongodb:27017
       - FLASK_BIND_IP=0.0.0.0
       - PYTHONUNBUFFERED=1
+      - PORT=${PORT_BACKEND}
     ports:
-      - "5000:5000"
+      - "${PORT_BACKEND}:${PORT_BACKEND}"
+
   frontend:
     build: ./frontend
     container_name: edutask-frontend
@@ -30,9 +33,10 @@ services:
       - backend
     environment:
       - HOST=0.0.0.0
-      - PORT=3000
+      - PORT=${PORT_FRONTEND}
+      - REACT_APP_BACKEND_PORT=${PORT_BACKEND}
     ports:
-      - "3000:3000"
+      - "${PORT_FRONTEND}:${PORT_FRONTEND}"
     command: npm run start
 
 networks:
