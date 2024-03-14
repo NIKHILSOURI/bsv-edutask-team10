@@ -80,3 +80,9 @@ The following issues are known and may require attention:
     4. Delete the file in /tmp which causes errors when tryng to start a new mongodb instance in a dir with `sudo rm /tmp/mongodb-27017.sock` in the terminal
     5. Then you can finally start up the database in the data/db directory
 4. In case port 5000 (default for the flask backend) or 3000 (default for the React.js frontend) are currently in use on your system, set them either locally in the `.env` files of the respective directories (if you run the system [locally](#setup-local)) or centrally in the `.env` file in the root directory (if you run the system [dockerized](#setup-with-docker)).
+
+## License
+
+The backend service was derived from [Marcos Vinícius](https://github.com/marcosvbras) project [todo-list-python](https://github.com/marcosvbras/todo-list-python), which is licenced under [Apache-2.0](https://github.com/marcosvbras/todo-list-python?tab=Apache-2.0-1-ov-file#readme).
+For all other additional content, Copyright © 2023 by Julian Frattini. 
+This work (source code) is available under [MIT license](./LICENSE).
