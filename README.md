@@ -54,6 +54,7 @@ Once all software and libraries are installed, you can start the system by perfo
 
 Now a browser window should open and display the frontend of the system at http://localhost:3000.
 You can specify the port of the frontend by changing the `PORT` environment variable in the `frontend/.env` file.
+When changing the port of the frontend and before executing Cypress, ensure to update the url specified as `baseUrl` in `frontend/cypress.config.js`.
 You can specify the port of the backend by changing the `PORT` environment variable in the `backend/.env` file.
 When changing the port of the backend, make sure to also update the `REACT_APP_BACKEND_PORT` environment variable in the `frontend/.env` file such that the frontend can still communicate with the backend.
 
