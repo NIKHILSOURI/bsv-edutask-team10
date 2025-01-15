@@ -6,10 +6,11 @@ This is the codebase for **edutask**, a simple web-based application where users
 The application consists of a database using MongoDB, a server using Flask, and a graphical user interface using React. 
 You can find more information in the [specification](./documentation/edutask-specification.pdf).
 
-Please keep the following in mind:
+> [!CAUTION]
+> This is a toy system containing **seeded defects**! These defects are intentional to provide an environment for learning testing techniques. Do not use this code for production purposes.
 
-* The system contains intended flaws, which are to be identified applying test techniques.
-* The system is a work-in-progress, meaning that some functionalities are not yet implemented. Focus on the functionalities that already exist, everything else can be disregarded for now.
+> [!INFO]
+> Note that this system is a work in progress, meaning that some functionalities have not yet been implemented. Focus on the functionalities that already exist. Everything else can be disregarded for now.
 
 ## Setup
 
@@ -24,7 +25,7 @@ The following steps need to be performed in order to start the system:
 1. Make sure that Docker (e.g., DockerDesktop on Windows) is currently running.
 2. Navigate a console (with admin rights) to the root folder of the repository and run `docker-compose up`.
 
-This will setup a network with three separate containers, one for each component. 
+This will set up a network with three separate containers, one for each component. 
 You can then access the system via a browser at http://localhost:3000.
 You can specify the output port by changing the `PORT_FRONTEND` environment variable in the `.env` file.
 
