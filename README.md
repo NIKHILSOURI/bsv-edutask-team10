@@ -9,7 +9,7 @@ You can find more information in the [specification](./documentation/edutask-spe
 > [!CAUTION]
 > This is a toy system containing **seeded defects**! These defects are intentional to provide an environment for learning testing techniques. Do not use this code for production purposes.
 
-> [!INFO]
+> [!NOTE]
 > Note that this system is a work in progress, meaning that some functionalities have not yet been implemented. Focus on the functionalities that already exist. Everything else can be disregarded for now.
 
 ## Setup
@@ -74,8 +74,8 @@ You can interact with the system in different ways. Here are a few to explore th
 The following issues are known and may require attention:
 
 1. The system was built using nodejs 17, which has a [known compatability issue due to its upgrade to OpenSSL3](https://github.com/webpack/webpack/issues/14532#issuecomment-947807590). Check the version of node that you are using and adapt accordingly:
-    * v17.0.0 and beyond: in frontend/package.json, the "start" script needs to contain the flag --openssl-legacy-provider 
-    * before v17.0.0: remove the --openssl-legacy-provider flag from the "start" script
+    * v17.0.0 and beyond: in frontend/package.json, the "start" script needs to contain the flag `--openssl-legacy-provider`
+    * before v17.0.0: remove the `--openssl-legacy-provider` flag from the "start" script
 2. When starting the MongoDB with `mongod`, make sure to use the path separators appropriate on your operating system.
 3. When using Fedora as your Linux distribution and encountering issues installing mongoDB (student solution): 
     1. From https://www.mongodb.com/try/download/community, select RedHat / CentOS 8.0 as platform and download the .rpm file
